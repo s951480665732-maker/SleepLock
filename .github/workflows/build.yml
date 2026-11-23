@@ -6,11 +6,10 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: SleepLock
     steps:
       - uses: actions/checkout@v4
+      - name: Unzip project
+        run: for z in *.zip; do unzip -qo "$z"; done
       - uses: actions/setup-java@v4
         with:
           distribution: temurin
@@ -18,7 +17,9 @@ jobs:
       - uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: 8.9
-      - run: gradle assembleDebug --no-daemon
+      - name: Build
+        working-directory: SleepLock
+        run: gradle assembleDebug --no-daemon
       - uses: actions/upload-artifact@v4
         with:
           name: SleepLock-apk
